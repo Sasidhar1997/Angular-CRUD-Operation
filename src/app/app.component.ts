@@ -1,57 +1,29 @@
 import { Component , OnInit } from '@angular/core';
-
-
+import { ApiService } from "./api.service"
+import { MyNewInterface } from "./my-new-interface";
+import { error } from 'util';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  providers:[ApiService]
 })
-export class AppComponent  {
+export class AppComponent implements OnInit{
+  title = 'app';
 
-  // Array Declaration 
-  myItems:any[] = new Array();
+  _postsArray: MyNewInterface[];
 
-  // variables
-  IsForUpdate: boolean = false;
-  newItem: any = {};
-  updatedItem;
+  constructor(private apiSerivce: ApiService){}
 
-  // Provide some values to the array
-  constructor()
-  {
-    this.myItems.push( );
+  getPosts(): void {
+    this.apiSerivce.getPosts().
+    subscribe(
+       resultArray => this._postsArray =
+       resultArray,
+       error => console.log("Error :: " + error ))
   }
+  ngOnInit(): void{
+    this.getPosts();
 
-   // To add new item in array
-   AddItem() {
-    this.myItems.push(
-      this.newItem
-    );
-    this.newItem = {};
   }
-
-   // When user selects edit option
-   EditItem(i) {
-    this.newItem.Value = this.myItems[i].Value;
-    this.updatedItem = i;
-    this.IsForUpdate = true;
-  }
-
-  // When user clicks on update button to submit updated value
-  UpdateItem() {
-    let data = this.updatedItem;
-    for (let i = 0; i < this.myItems.length; i++) {
-      if (i == data) {
-        this.myItems[i].Value = this.newItem.Value;
-      }
-    }
-    this.IsForUpdate = false;
-    this.newItem = {};
-  }
-
-  // To delete specific item
-  DeleteItem(i) {
-    this.myItems.splice(i, 1);
-  }
-  
 }
